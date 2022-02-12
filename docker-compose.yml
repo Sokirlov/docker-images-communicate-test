@@ -1,0 +1,13 @@
+version: "3.9"  # optional since v1.27.0
+
+services:
+  a:
+    build: './a'
+    network_mode: bridge
+    links:
+      - "best:best"
+    command: ['python', 'main.py']
+
+  best:
+    build: './b'
+    network_mode: bridge
