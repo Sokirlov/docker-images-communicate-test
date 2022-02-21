@@ -1,11 +1,28 @@
-# import best
-import subprocess, os
-
-
-directoru = os.listdir('/app')
-print('It`s run A - ', directoru)
+import subprocess, os, sys, time, asyncio, socket
+import redis
 
 
 
-subprocess.run(['curl', 'best'])
+data = "Some text from server A "
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+	sock.connect(('192.168.25.27', 9999))
+	sock.sendall(bytes(data + "\n", "utf-8"))
+	received = str(sock.recv(1024), "utf-8")
+time.sleep(5)
+print(f"Sent:     {data}")
+print(f"Received: {received}")
 
+r = redis.Redis(host='redis', port=6379)
+rest = r.get("fo0o")
+
+print('test', rest)
+
+
+# print('directory - ', os.listdir('/bpp'))
+# time.sleep(1000)
+
+# r = redis.Redis()
+# r.mset({'soxwhite@gmail.com':['ghant', 'fb', 'insta']})
+#
+# s = r.get('soxwhite@gmail.com')
+# print('redis', s)

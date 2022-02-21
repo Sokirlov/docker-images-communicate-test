@@ -1,13 +1,48 @@
 version: "3.9"  # optional since v1.27.0
 
 services:
-  a:
-    build: './a'
-    network_mode: bridge
-    links:
-      - "best:best"
-    command: ['python', 'main.py']
+  redis:
+    image: 'redis'
+    restart: always
+#    networks:
+#      - s_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - "./config/redis.conf:/redis.conf"
+    command: [ "redis-server", "/redis.conf" ]
 
   best:
     build: './b'
-    network_mode: bridge
+    container_name: 'server'
+    #    network_mode: bridge
+    # tty: true
+    #    volumes:
+    #      - "best:/app"
+#    networks:
+#      - s_redis
+    ports:
+      - "9999:9999"
+    links:
+      - redis
+    #    command: /bin/bash -c "dir && python index.py"
+    #    command:
+    command: [ 'python', 'index.py' ]
+
+  a:
+    build: './a'
+    container_name: 'Client'
+#    network_mode: bridge
+    #    volumes:
+    #      - type: bind
+    #        source: 'best'
+    #        target: /bpp
+    #    volumes:
+    #    #      - "best:/app"
+    #          - "best:/app/app"
+    links:
+      - best
+      - redis
+    #    command: dir
+    command: /bin/bash -c "dir && python main.py"
+#    command: [ 'python', 'main.py' ]
