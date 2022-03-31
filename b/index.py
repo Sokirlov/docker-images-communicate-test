@@ -4,11 +4,7 @@ r = redis.Redis(host='redis', port=6379)
 class MyTCPHandler(socketserver.BaseRequestHandler):
     def handle(self):
         self.data = self.request.recv(1024).strip()
-
-        r.set('foo', str(self.data, "utf-8")+' мой текст')
-        print(r.get('foo'))
-
-        # self.request.sendall(self.data.upper())
+        r.set('foo', str(self.data, "utf-8")+' my text')
         self.request.sendall(bytes('foo', 'utf-8'))
 
 
@@ -19,5 +15,3 @@ def start_aserver():
 
 if __name__ == "__main__":
     start_aserver()
-
-# time.sleep(1000)

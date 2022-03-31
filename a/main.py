@@ -5,7 +5,7 @@ import redis
 
 data = "Some text from server A "
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-	sock.connect(('192.168.25.27', 9999))
+	sock.connect(('server', 9999))
 	sock.sendall(bytes(data + "\n", "utf-8"))
 	received = str(sock.recv(1024), "utf-8")
 time.sleep(5)
@@ -13,7 +13,7 @@ print(f"Sent:     {data}")
 print(f"Received: {received}")
 
 r = redis.Redis(host='redis', port=6379)
-rest = r.get("fo0o")
+rest = r.get(received)
 
 print('test', rest)
 
